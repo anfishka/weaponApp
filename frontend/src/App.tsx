@@ -3,7 +3,7 @@ import img1 from './assets/img1.jpg';
 import img2 from './assets/img2.jpg';
 import './App.css';
 import ProductList from "./components/ProductList";
-import { BrowserRouter, Route, Router, RouterProvider, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProductDetail from "./blocks/ProductDetail";
 import { Product } from "./components/Product";
 import Header from "./layouts/Header";

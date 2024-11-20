@@ -44,9 +44,13 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
       {/* Сортировка */}
       <div className="sort-dropdown">
       <label htmlFor="sort-select" className="sort-label">Сортировка</label>
-      <select id="sort-select">
-    <option value="rating">По дате</option>
-    <option value="price">По категории</option>
+      <select 
+      id="sort-select"
+      value={sortOption}
+      onChange={(e) => setSortOption(e.target.value as "date" | "category")}
+      >
+    <option value="date">По дате</option>
+    <option value="category">По категории</option>
   </select>
       </div>
 
