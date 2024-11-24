@@ -247,3 +247,11 @@ code {
 .sort-label{
   display: block;
 }
+
+
+.product-card img {
+  width: 100% !important; /* Занимает всю ширину контейнера */
+  height: auto; /* Автоматически подстраивает высоту для сохранения пропорций */
+  object-fit: contain; /* Вписывает изображение, чтобы не было обрезки */
+  max-height: 200px;
+}

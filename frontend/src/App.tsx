@@ -1,7 +1,6 @@
-import React from "react";
-import img1 from './assets/img1.jpg';
-import img2 from './assets/img2.jpg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import "./App.css";
 import ProductList from "./components/ProductList";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ProductDetail from "./blocks/ProductDetail";
@@ -9,119 +8,69 @@ import { Product } from "./components/Product";
 import Header from "./layouts/Header";
 import Footer from "./layouts/Footer";
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  },
-  {
-    id: 2,
-    name: "Пистолет Glock",
-    description: "Надежный и компактный пистолет.",
-    category: "Пистолеты",
-    image: img2,
-    date: "2024-10-10",
-  },
-  {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  },
-  {
-    id: 2,
-    name: "Пистолет Glock",
-    description: "Надежный и компактный пистолет.",
-    category: "Пистолеты",
-    image: img2,
-    date: "2024-10-10",
-  },
-  {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  },
-  {
-    id: 2,
-    name: "Пистолет Glock",
-    description: "Надежный и компактный пистолет.",
-    category: "Пистолеты",
-    image: img2,
-    date: "2024-10-10",
-  },
-  {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  },
-  {
-    id: 2,
-    name: "Пистолет Glock",
-    description: "Надежный и компактный пистолет.",
-    category: "Пистолеты",
-    image: img2,
-    date: "2024-10-10",
-  } ,
-  {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  }, {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  },
-   {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  }, {
-    id: 1,
-    name: "Снайперская винтовка",
-    description: "Высокоточная винтовка для дальнего боя.",
-    category: "Винтовки",
-    image: img1,
-    date: "2024-11-15",
-  }
-  // Добавьте больше товаров
-];
+const App: React.FC = () => {
+  const [data, setData] = useState<Product[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-const App: React.FC = () => (
-  <BrowserRouter>
-  <div className="app">
+  
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get<Product[]>(`https://localhost:7208/api/Products/`);
+        console.log("API response:", response.data);
+  
+        // Преобразуем данные, гарантируя, что date всегда строка
+        const mappedData = response.data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description,
+          category: item.category,
+          imageUrl: item.imageUrl || "/placeholder.png",
+          isVisible: item.isVisible, // Сделаем поле необязательным
+          adminId: item.adminId, // Приведение типов
+          adminName: item.adminName,
+          model: item.model,
+          createdAt: item.createdAt,
+        }));
+
+       
+  
+        setData(mappedData);
+      } catch (err) {
+        console.error("Ошибка при загрузке данных:", err);
+        setError("Ошибка загрузки данных.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchProducts();
+  }, []);
+  
+  
+
+  return (
+    <BrowserRouter>
+      <div className="app">
         <Header />
         <main className="content">
-          <Routes>
-            <Route path="/" element={<ProductList products={products} />} />
-            <Route path="/product/:id" element={<ProductDetail  products={products}/>} />
-          </Routes>
+          {loading ? (
+            <p>Загрузка...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            <Routes>
+              <Route path="/" element={<ProductList products={data} />} />
+              <Route path="/product/:id" element={<ProductDetail products={data} />} />
+            </Routes>
+          )}
         </main>
         <Footer />
       </div>
-</BrowserRouter>
-
-);
-
+    </BrowserRouter>
+  );
+};
 
 export default App;
