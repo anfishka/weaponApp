@@ -18,7 +18,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>(`https://localhost:7208/api/Products/`);
+        const response = await axios.get<Product[]>(`https://weaponadminapi20241125032218.azurewebsites.net/api/Products/`);
         console.log("API response:", response.data);
   
         // Преобразуем данные, гарантируя, что date всегда строка
